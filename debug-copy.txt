@@ -1,0 +1,160 @@
+// (Nombre del proyecto), authors:
+// - Leonardo Tovíaz López
+// - Diego Pepi de León
+package main
+
+import (
+	"fmt"
+	"regexp"
+	"strings"
+  "math"
+	//"unicode"
+
+	"bufio"
+	"os"
+)
+
+func main() {
+//-------------------------------Variables------------------------------
+  var (
+    mainText string
+	  usrInput string
+    usrWrdsContainer []string
+	  kWrds uint = 0
+
+    textAsSlice []string
+    maxK float64
+    op float64 = 0.2
+  )
+
+  in := bufio.NewScanner(os.Stdin)
+//---------------------------Entering text------------------------------
+  fmt.Println("Paste an article/essay on terminal and try to enter keywords of it...")
+
+  for {
+  	// Reads user input until \n by default
+  	in.Scan()
+  	mainText := in.Text()
+
+    // Remove symbols from string
+    re, err := regexp.Compile(`[^\w]`)
+	  if err != nil {
+      fmt.Println("Error:", err, ", try again.")
+      mainText = ""; // To keep loop running
+	  }
+    mainText = re.ReplaceAllString(mainText, " ")
+
+    mainText = strings.ToLower(mainText)
+    
+  	if len(mainText) != 0 {
+      as := strings.Fields(mainText)
+      // Copy elements of the inner scope slice as to a higher scope slice
+      textAsSlice = append(textAsSlice, as...)
+      break
+	  }
+    // Block for handling input error
+    if in.Err() != nil {
+    	fmt.Println("Error:", in.Err(), ", try again.")
+    }
+  }
+//----------------------Processing text as slice------------------------
+  maxK = float64(len(textAsSlice)) * op
+  maxK = math.Ceil(maxK)
+  
+  for i := 0; i < len(textAsSlice); i++ {
+    //Delete elements that are just numbers
+    //r := []rune(textAsSlice[i])
+    //if unicode.IsNumber(r[i]) {
+      //textAsSlice[i] = ""
+      // An alternative is to overwrite element to remove with the last index
+      // and then return all slice without the last element
+    //}
+    fmt.Println(textAsSlice[i])
+  }  
+//-------------------------Entering keywords----------------------------
+  fmt.Println(`Now try to remember content of the text and enter keywords! (Enter "esc" to stop entenring keywords...)`)
+  fmt.Println("Palabras necesarias p/aprobar:", maxK)
+
+  for {
+    // Reads user input until \n by default
+  	in.Scan()
+  	usrInput := in.Text()
+
+    // Remove symbols from string
+    re, err := regexp.Compile(`[^\w]`)
+	  if err != nil {
+      fmt.Println("Error:", err, ", try again.")
+      usrInput = ""; // To keep loop running
+	  }
+    usrInput = re.ReplaceAllString(usrInput, " ")
+
+    usrInput = strings.ToLower(usrInput)
+
+    if len(usrInput) != 0 {
+      // Allows multiple words input (separated by space)
+      if usrInput != "esc"{
+         ts := strings.Fields(usrInput)
+      // Copy elements of the inner scope slice as to a higher scope slice
+      usrWrdsContainer = append(usrWrdsContainer, ts...)
+      }
+      
+	  }
+    if usrInput == "esc" {
+      break
+    }
+    
+    // Block for handling input error
+    if in.Err() != nil {
+    	fmt.Println("Error:", in.Err(), ", try again.")
+    }
+  }
+
+//---------------------------Compare slices-----------------------------
+  fmt.Println("usrWrdsContainer len:", len(usrWrdsContainer))
+  fmt.Println("textAsSlice len:", len(textAsSlice))
+
+  // Remove dupes
+  fmt.Println(textAsSlice)
+  textAsSlice = removeDuplicateStr(textAsSlice)
+  fmt.Println(textAsSlice)
+
+
+  for i:=0; i<len(textAsSlice);i++{
+    fmt.Println("Prueba i:",i )
+    for j:=0; j<len(usrWrdsContainer);j++{
+      fmt.Println("Print j:", j)
+      if textAsSlice[i]==usrWrdsContainer[j] {
+      //if strings.Contains(textAsSlice[i],usrWrdsContainer[j])==true {
+        kWrds++
+      }
+    }
+  }
+  
+  fmt.Println("\n")
+  //fmt.Println(textAsSlice)
+  fmt.Println(mainText)
+  fmt.Println(kWrds)
+  fmt.Println(usrInput)
+  fmt.Println("Contenedor de palabras del usuario: \n", usrWrdsContainer)
+
+  if float64(kWrds) >= maxK {
+    fmt.Println("You have good undestanding of the subject :)")
+  } else {
+    fmt.Println("Keep going, you need more practice")
+  }
+  // para evitar el error <x variable> no ha sido utilizada, se me ocurre imprimir algunos de los mensajes pero con una condicional que cheque si las variables no son nulas o si su length tiene mas de 0; algo trivial pero supongo que servira para evitar ese compiler error
+}
+
+
+//---------------------------Helper methods-----------------------------
+func removeDuplicateStr(strSlice []string) []string {
+    allKeys := make(map[string]bool)
+    list := []string{}
+    for _, item := range strSlice {
+        if _, value := allKeys[item]; !value {
+            allKeys[item] = true
+            list = append(list, item)
+        }
+    }
+    return list
+}
