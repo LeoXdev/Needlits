@@ -26,9 +26,3 @@ It can be used in many ways, use the one you prefer and adapts to your needs.
 3.- Depending on the length of your text, the program will calculate an amount of needed keywords to approve.
 
 4.- When you don't want to enter anymore keywords, enter the word "esc" (without quotation marks) and the program will send you your result.
-
-## Long-term expectatives
-- Polish this program adding extra validations and more features.
-- Integrate this program on a website, and then keep expanding that website with more apps to study and be more productive.
-- Promote that website in social media to make more people access these study and productivity tools.
-- The ultimate goal would be to create an organization to help people in their studies.
